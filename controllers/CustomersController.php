@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+
+
+
 /**
  * CustomersController implements the CRUD actions for Customers model.
  */
@@ -61,7 +64,7 @@ class CustomersController extends Controller
     public function actionCreate()
     {
         $model = new Customers();
-
+        $model->scenario = 'customerEdit';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -80,7 +83,7 @@ class CustomersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -113,6 +116,7 @@ class CustomersController extends Controller
     protected function findModel($id)
     {
         if (($model = Customers::findOne($id)) !== null) {
+            $model->scenario = 'customerEdit';
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

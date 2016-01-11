@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cliche */
 
-$this->title = 'Create Cliche';
-$this->params['breadcrumbs'][] = ['label' => 'Cliches', 'url' => ['index']];
+$this->title = 'Створити кліше';
+$this->params['breadcrumbs'][] = ['label' => 'Кліше', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cliche-create">
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'customers_model' => $customers_model,
+        'customers_base' => $customers_base,
     ]) ?>
 
 </div>

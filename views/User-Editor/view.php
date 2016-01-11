@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Видалити', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Точно видалити?',
+                'confirm' => 'Ви дійсно хочете видалити запис?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'displayName',
-            'password',
             'authKey',
             'accessToken',
             'positionWork',

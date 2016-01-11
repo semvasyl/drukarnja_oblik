@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Cliche */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Cliches', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Кліше', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cliche-view">
@@ -15,11 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Редагувати', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Видалити', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Ви дійсно хочете видалити запис?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -28,13 +28,36 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'customerId',
-            'clicheName',
-            'clicheCutting',
-            'colorNumbers',
-            'isWork',
-            'comments',
+            
+            [                      
+                'label' => 'Код',
+                'value' => $model->id,
+            ],   
+            [                      
+                'label' => 'Замовник',
+                'value' => $model->customerId."  (".$selectedCustomer.")",
+            ],
+            [                      
+                'label' => 'Назва кліше',
+                'value' => $model->clicheName,
+            ],  
+            [                      
+                'label' => 'Форма висічки',
+                'value' => $model->clicheCutting,
+            ],
+            [                      
+                'label' => 'Кількість кольорів',
+                'value' => $model->colorNumbers,
+            ],
+            [                      
+                'label' => 'Використовується',
+                'value' => $model->isWork,
+            ],
+            [                      
+                'label' => 'Примітки',
+                'value' => $model->comments,
+            ],       
+            
         ],
     ]) ?>
 

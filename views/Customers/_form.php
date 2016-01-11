@@ -12,18 +12,18 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'customerName')->textInput(['maxlength' => true])->label('Назва') ?>
+    <?= $form->field($model, 'customerName')->textInput(['maxlength' => true])->label('Назва'); ?>
 
-    <?= $form->field($model, 'contactAddress')->textInput(['maxlength' => true])->label('контактна адреса') ?>
+    <?= $form->field($model, 'contactAddress')->textInput(['maxlength' => true])->label('контактна адреса'); ?>
 
-    <?= $form->field($model, 'contactEmail')->textInput(['maxlength' => true])->label('е-пошта') ?>
+    <?= $form->field($model, 'contactEmail')->textInput(['maxlength' => true])->label('е-пошта'); ?>
 
     <?= $form->field($model, 'isWork')->dropDownList([1 => 'Так', 0 => 'Ні'])->label('Відбувається співпраця') ?>
 
     <?= $form->field($model, 'comments')->textInput(['maxlength' => true])->label('Примітка') ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Створити' : 'Редагувати', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cliche */
 
-$this->title = 'Update Cliche: ' . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Cliches', 'url' => ['index']];
+$this->title = 'Редагувати кліше: ' . ' ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Кліше', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Редагувати';
 ?>
 <div class="cliche-update">
 
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'customers_model' => $customers_model,
+        'customers_base' => $customers_base,
     ]) ?>
 
 </div>

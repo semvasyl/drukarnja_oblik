@@ -24,17 +24,35 @@ class Customers extends \yii\db\ActiveRecord
         return 'customers';
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            'customerEdit' => ['customerName', 'contactAddress', 'contactEmail', 'comments','isWork'],
+            'clisheEdit' => ['customerName','isWork']
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['customerName', 'contactAddress', 'contactEmail', 'isWork', 'comments'], 'required'],
-            [['isWork'], 'integer'],
-            [['customerName', 'contactAddress', 'contactEmail', 'comments'], 'string', 'max' => 255]
+            [['customerName', 'contactAddress', 'contactEmail', 'comments'], 'required', 'on' => 'customerEdit'],                
+            
+            [['customerName'], 'required','on' => 'clisheEdit'],
+            
+            [['isWork'], 'integer']
         ];
     }
+
+
+
+
 
     /**
      * @inheritdoc

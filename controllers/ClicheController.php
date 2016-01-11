@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\base\Model;
 use app\models\Cliche;
 use app\models\Customers;
 use yii\data\ActiveDataProvider;
@@ -49,8 +50,11 @@ class ClicheController extends Controller
      */
     public function actionView($id)
     {
+        $model=$this->findModel($id);
+        $selectedCustomer=$this->findModelCustomers($model->customerId);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'selectedCustomer' => $selectedCustomer->customerName,
         ]);
     }
 
@@ -62,14 +66,28 @@ class ClicheController extends Controller
     public function actionCreate()
     {
         $model = new Cliche();
-        $customers = new Customers();
-        $customers_base = array_keys($customers->getNameList());
 
+        $customers_base = array();
+        $customers_model = new Customers();
+        $customers_model->scenario = 'clisheEdit';
+
+        $good_base= $customers_model->find()
+            ->where(['isWork' => 1])
+            ->orderBy('id')
+            ->asArray()
+            ->all();
+        foreach ($good_base as $key => $value) {
+            $customers_base=array_combine(array($value["id"]), array($value["customerName"]));
+        }
+        
+
+        //if (Model::loadMultiple([$model, $customers_model], Yii::$app->request->post())) {
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'customers_model' => $customers_model,
                 'customers_base' => $customers_base,
             ]);
         }
@@ -84,12 +102,27 @@ class ClicheController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $customers_base = array();
+        $customers_model = $this->findModelCustomers($model->customerId);
+        $customers_model->scenario = 'clisheEdit';
+
+        $good_base= $customers_model->find()
+            ->where(['isWork' => 1])
+            ->orderBy('id')
+            ->asArray()
+            ->all();
+        foreach ($good_base as $key => $value) {
+            $customers_base=array_combine(array($value["id"]), array($value["customerName"]));
+        }
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'customers_model' => $customers_model,
+                'customers_base' => $customers_base,
             ]);
         }
     }
@@ -117,6 +150,23 @@ class ClicheController extends Controller
     protected function findModel($id)
     {
         if (($model = Cliche::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+
+    /**
+     * Finds the Customers model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Customers the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModelCustomers($id)
+    {
+        if (($model = Customers::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
