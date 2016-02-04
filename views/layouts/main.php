@@ -40,8 +40,8 @@ AppAsset::register($this);
 
             ['label' => 'Менеджер',
                 'items' => [
-                    ['label' => 'Додати замовлення', 'url' => ['/site/about']],
-                    ['label' => 'Мої роботи', 'url' => ['/site/contact']],
+                    ['label' => 'Додати замовлення', 'url' => ['/orders/create']],
+                    ['label' => 'Мої роботи', 'url' => ['/orders']],
                 ]
             ],        
 

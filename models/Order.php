@@ -36,11 +36,31 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pressure', 'orderDate', 'bugalterId','customerId', 'managerId', 'typographerId', 'dateCreated', 'dateStartJob', 'dateEndJob', 'orderStatus', 'orderComment'], 'required'],
-            [['pressure', 'orderDate', 'bugalterId','customerId', 'managerId', 'typographerId', 'dateCreated', 'dateStartJob', 'dateEndJob'], 'integer'],
-            [['orderStatus', 'orderComment'], 'string', 'max' => 254]
+            
+            [['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'dateStartJob'], 'required','on' => 'managerAdd'],
+            [['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'bugalterId', 'dateStartJob'], 'required','on' => 'bugalterConfirm'],
+            [['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'bugalterId', 'typographerId', 'dateStartJob', 'dateEndJob'], 'required','on' => 'typographerConfirm'],
+
+            [['pressure', 'bugalterId','customerId', 'managerId', 'typographerId', 'dateCreated', 'dateStartJob', 'dateEndJob'], 'integer'],
+            [['orderStatus', 'orderDate', 'orderComment'], 'string', 'max' => 254]
         ];
     }
+    //[['pressure', 'orderDate', 'bugalterId','customerId', 'managerId', 'typographerId', 'dateCreated', 'dateStartJob', 'dateEndJob', 'orderStatus', 'orderComment'], 'required'],
+
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            'managerAdd' => ['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'orderStatus', 'orderComment'],
+            'bugalterConfirm' => ['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'orderStatus', 'orderComment', 'bugalterId'],
+            'typographerConfirm' => ['pressure', 'orderDate', 'bugalterId','customerId', 'managerId', 'typographerId', 'dateCreated', 'dateStartJob', 'dateEndJob', 'orderStatus', 'orderComment'],
+        ];
+    }
+
+
 
     /**
      * @inheritdoc
