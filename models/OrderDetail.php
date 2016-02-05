@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "orderDetail".
@@ -39,7 +40,7 @@ class OrderDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['orderId', 'materialName', 'materialDescription', 'amount', 'amontActual', 'amountMeters', 'amountMetersEstimated', 'clisheName', 'clisheCutting', 'colorNumbers', 'position', 'dateStart', 'dateFinish', 'comment'], 'required'],
+            [['orderId', 'materialName', 'materialDescription', 'amount', 'amontActual', 'amountMeters', 'amountMetersEstimated', 'clisheName', 'clisheCutting', 'colorNumbers', 'dateStart', 'dateFinish', 'comment'], 'required'],
             [['orderId', 'clisheCutting', 'position', 'dateStart', 'dateFinish'], 'integer'],
             [['amount', 'amontActual', 'amountMeters', 'amountMetersEstimated'], 'number'],
             [['materialName', 'materialDescription', 'clisheName', 'colorNumbers', 'comment'], 'string', 'max' => 254]

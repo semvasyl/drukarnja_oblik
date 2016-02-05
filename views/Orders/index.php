@@ -24,14 +24,26 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'orderId',
             //'pressure',
-            'orderDate',
-            'customerId',
+            [
+                'label' => 'Замовлення від',
+                'attribute' => 'orderDate',
+            ],
+            [
+                'label' => 'Замовник',
+                'attribute' => 'customerId',
+            ],
+            [
+                'label' => 'Статус заявки',
+                'attribute' => 'orderStatus',
+            ],
+            // 'orderDate',
+            // 'customerId',
             // 'managerId',
             // 'typographerId',
             // 'dateCreated',
             // 'dateStartJob',
             // 'dateEndJob',
-            'orderStatus',
+            // 'orderStatus',
             // 'orderComment',
 
             ['class' => 'yii\grid\ActionColumn'],

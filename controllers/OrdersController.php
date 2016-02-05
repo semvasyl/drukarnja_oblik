@@ -62,17 +62,21 @@ class OrdersController extends Controller
         $modelItemsProvider=$this->getModelItemsProvider($model->orderId);
         $modelCustomer=$this->findModelCustomers($model->customerId);
         $modelManager=$this->findModelUsers($model->managerId);
-        //$modelBugalter= $this->findModelUsers($model->bugalterId);
-        //$modelTypographer= $this->findModelUsers($model->typographerId);
+        $modelBugalter= $this->findModelUsers($model->bugalterId);
+        $modelTypographer= $this->findModelUsers($model->typographerId);
 
 
-
+        
+        
+        
 
         return $this->render('view', [
             'model' => $model,
             'modelItemsProvider' => $modelItemsProvider,
-            'manager' =>$modelManager->displayName,
-            'customer' =>$modelCustomer->customerName,
+            'manager' =>(($modelManager==0)?0:$modelManager->displayName),
+            'customer' =>(($modelCustomer==0)?0:$modelCustomer->customerName),
+            'bugalter' =>(($modelBugalter==0)?0:$modelBugalter->displayName),
+            'typographer'=>(($modelTypographer==0)?0:$modelTypographer->displayName),
         ]);
     }
 
@@ -170,14 +174,34 @@ class OrdersController extends Controller
     {
         $modelOrder = $this->findModel($id);
         $modelsItems = $this->getModelItems($modelOrder->orderId);
+        $modelOrder->scenario = 'managerAdd';
         //$modelsItems = $modelOrder->items;
+        $customers_model = new Customers();
+        $customers_base=$arr_keys=$arr_vals=array();
+        $good_base= $customers_model->find()
+            ->where(['isWork' => 1])
+            ->orderBy('id')
+            ->asArray()
+            ->all();
+        foreach ($good_base as $key => $value) {
+            
+            array_push($arr_keys, $value["id"]);
+            array_push($arr_vals, $value["customerName"]);
+            
+        }
+            $customers_base=array_combine(array($arr_keys), array($arr_vals));
+
 
         if ($modelOrder->load(Yii::$app->request->post())) {
-
+            echo "== post request<br/>";
             $oldIDs = ArrayHelper::map($modelsItems, 'id', 'orderId');
-            $modelsItems = Model::createMultiple(OrderDetail::classname(), $modelsItems);
+            echo "== oldIDs are=<br/>";
+            print_r($oldIDs);
+            $modelsItems = OrderDetail::createMultiple(OrderDetail::classname(), $modelsItems);
             Model::loadMultiple($modelsItems, Yii::$app->request->post());
-            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsItems, 'id', 'id')));
+            echo "== deletedIDs are=<br/>";
+            print_r($deletedIDs);
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsItems, 'id', 'orderId')));
 
             // ajax validation
             if (Yii::$app->request->isAjax) {
@@ -190,18 +214,23 @@ class OrdersController extends Controller
 
             // validate all models
             $valid = $modelOrder->validate();
-            $valid = Model::validateMultiple($modelsItems) && $valid;
-
+            $valid = print_r(Model::validateMultiple($modelsItems)) && $valid;
+            echo "== valid is=  ".$valid."<br/>";
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
+                echo "==(trasaction) start<br/>";
                 try {
                     if ($flag = $modelOrder->save(false)) {
                         if (! empty($deletedIDs)) {
-                            Address::deleteAll(['id' => $deletedIDs]);
+                            echo "==(trasaction) delete oldIDs<br/>";
+                            OrderDetail::deleteAll(['orderId' => $deletedIDs]);
                         }
+                        echo "==(trasaction) modelItems post data are=<br/>";                        
                         foreach ($modelsItems as $modelItems) {
-                            $modelItems->customer_id = $modelOrder->id;
+                            echo "==(trasaction) save model item<br/>";
+                            $modelItems->orderId = $modelOrder->orderId;
                             if (! ($flag = $modelItems->save(false))) {
+                                echo "======(trasaction) rollback<br/>";
                                 $transaction->rollBack();
                                 break;
                             }
@@ -209,9 +238,11 @@ class OrdersController extends Controller
                     }
                     if ($flag) {
                         $transaction->commit();
-                        return $this->redirect(['view', 'id' => $modelOrder->id]);
+                        echo "==(trasaction) all ok. start redirect<br/>";
+                        return $this->redirect(['view', 'orderId' => $modelOrder->orderId]);
                     }
                 } catch (Exception $e) {
+                    echo "======(trasaction) rollback catch way<br/>";
                     $transaction->rollBack();
                 }
             }
@@ -219,7 +250,8 @@ class OrdersController extends Controller
 
         return $this->render('update', [
             'modelOrder' => $modelOrder,
-            'modelsItems' => (empty($modelsItems)) ? [new OrderDetail()] : $modelsItems
+            'modelsItems' => (empty($modelsItems)) ? [new OrderDetail()] : $modelsItems,
+            'customers_base' => $customers_base
         ]);
     }
 
@@ -248,6 +280,28 @@ class OrdersController extends Controller
 
         return $this->redirect(['index']);
     }
+
+    public function actionBugalterconfirm($id)
+    {
+        $modelOrder=$this->findModel($id);
+        $modelOrder->scenario="bugalterConfirm";
+        $values = [
+            'bugalterId' => Yii::$app->user->identity->id,
+            'orderStatus' => 'bugalter confirm',
+        ];
+        $modelOrder->attributes = $values;
+        
+        if ($modelOrder->save(false)) {            
+            return $this->redirect(['index']);
+        }else{
+            echo "false";
+        }
+
+    }
+
+
+
+
 
     /**
      * Finds the Order model based on its primary key value.
@@ -288,6 +342,9 @@ class OrdersController extends Controller
      */
     protected function findModelUsers($id)
     {
+        if ($id==0) {
+            return 0;
+        }
         if (($model = User::findOne($id)) !== null) {
             return $model;
         } else {
@@ -321,11 +378,13 @@ class OrdersController extends Controller
      */
     protected function getModelItems($id)
     {
-        if (($model = OrderDetail::find()->where(['orderId' => $id])) !== null) {
+        $model = OrderDetail::find()->where(['orderId' => $id])->all();
+        return $model;
+        /*if (($model = OrderDetail::find()->where(['orderId' => $id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
-        }
+        }*/
     }
 }
 

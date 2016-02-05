@@ -38,7 +38,7 @@ class Order extends \yii\db\ActiveRecord
         return [
             
             [['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'dateStartJob'], 'required','on' => 'managerAdd'],
-            [['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'bugalterId', 'dateStartJob'], 'required','on' => 'bugalterConfirm'],
+            [['orderStatus', 'bugalterId'], 'required','on' => 'bugalterConfirm'],
             [['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'bugalterId', 'typographerId', 'dateStartJob', 'dateEndJob'], 'required','on' => 'typographerConfirm'],
 
             [['pressure', 'bugalterId','customerId', 'managerId', 'typographerId', 'dateCreated', 'dateStartJob', 'dateEndJob'], 'integer'],
@@ -55,7 +55,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             'managerAdd' => ['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'orderStatus', 'orderComment'],
-            'bugalterConfirm' => ['pressure', 'orderDate','customerId', 'managerId','dateCreated', 'orderStatus', 'orderComment', 'bugalterId'],
+            'bugalterConfirm' => ['orderStatus', 'bugalterId'],
             'typographerConfirm' => ['pressure', 'orderDate', 'bugalterId','customerId', 'managerId', 'typographerId', 'dateCreated', 'dateStartJob', 'dateEndJob', 'orderStatus', 'orderComment'],
         ];
     }

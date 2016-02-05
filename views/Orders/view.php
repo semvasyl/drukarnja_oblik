@@ -26,6 +26,39 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+
+        <?= Html::a('<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>Підтвердити заявку', ['bugalterconfirm', 'id' => $model->orderId], [
+            'class' => 'btn btn-success',
+            'data' => [
+                'confirm' => 'Передати заявку в друкарню на виконання?',
+                'method' => 'post',
+            ],
+        ]) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>Відхилити заявку', ['bugalterdenied', 'id' => $model->orderId], [
+            'class' => 'btn btn-success',
+            'data' => [
+                'confirm' => 'Передати заявку в друкарню на виконання?',
+                'method' => 'post',
+            ],
+        ]) ?>
+
+        
+        <?= Html::a('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Взяти на виконання', ['bugalterdenied', 'id' => $model->orderId], [
+            'class' => 'btn btn-success',
+            'data' => [
+                'confirm' => 'Передати заявку в друкарню на виконання?',
+                'method' => 'post',
+            ],
+        ]) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-check" aria-hidden="true"></span>Затвердити виконання', ['bugalterdenied', 'id' => $model->orderId], [
+            'class' => 'btn btn-success',
+            'data' => [
+                'confirm' => 'Передати заявку в друкарню на виконання?',
+                'method' => 'post',
+            ],
+        ]) ?>
+
+
     </p>
 
     <?php 
@@ -87,12 +120,14 @@ echo DetailView::widget([
         [
             'attribute'=>'bugalterId', 
             'label' => 'Підтвердив бухгалтер',
-            'type'=>DetailView::INPUT_SELECT2
+            'type'=>DetailView::INPUT_SELECT2,
+            'value'=>$bugalter,
         ],
         [
             'attribute'=>'typographerId', 
             'label' => 'Друкар, який виконує',
-            'type'=>DetailView::INPUT_SELECT2
+            'type'=>DetailView::INPUT_SELECT2,
+            'value'=>$typographer,
         ],
 
         [

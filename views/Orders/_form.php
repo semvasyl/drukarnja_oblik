@@ -34,7 +34,7 @@ $script = <<< JS
         alert("Limit reached");
     });
 JS;
-//$this->registerJs($script,  yii\web\View::POS_READY);
+$this->registerJs($script,  yii\web\View::POS_READY);
 
 ?>
 
@@ -58,7 +58,7 @@ JS;
     ])
     ->label('Замовник'); ?>
 
-    <?= $form->field($model, 'managerId')->hiddenInput(['value' => (!empty($model->managerId)?$model->managerId:Yii::$app->user->identity->levelAccess)])->label(false) ?>
+    <?= $form->field($model, 'managerId')->hiddenInput(['value' => (!empty($model->managerId)?$model->managerId:Yii::$app->user->identity->id)])->label(false) ?>
 
 
 
@@ -91,7 +91,7 @@ JS;
         'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
         'widgetBody' => '.container-items', // required: css class selector
         'widgetItem' => '.item', // required: css class
-        'limit' => 4, // the maximum times, an element can be added (default 999)
+        'limit' => 10, // the maximum times, an element can be added (default 999)
         'min' => 1, // 0 or 1 (default 1)
         'insertButton' => '.add-item', // css class
         'deleteButton' => '.remove-item', // css class
@@ -107,7 +107,7 @@ JS;
             'clisheName',
             'clisheCutting',
             'colorNumbers',
-            'position',
+            //'position',
             'dateStart',
             'dateFinish',
             'comment',
@@ -177,7 +177,8 @@ JS;
                             </div>
                         </div><!-- .row -->   
 
-                        <?= $form->field($model, '[{$i}]position')->hiddenInput(['value' => 1])->label(false) ?>
+                        
+                        <?php /*$form->field($model, '[{$i}]positions')->hiddenInput(['value' => 1])->label(false)*/   /*[{$i}]position*/ ?>
                         <div class="row">
                             <div class="col-sm-4">
                                 <?= $form->field($modelItem, "[{$i}]dateStart")->textInput(['maxlength' => true, 'value' => time()])->label('Видано на друк') ?>
